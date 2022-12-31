@@ -1,5 +1,5 @@
 <script setup>
-import NewsFeed from '../components/NewsFeed.vue'
+import NewsFeed from "../components/NewsFeed.vue";
 </script>
 
 <template>

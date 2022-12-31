@@ -2,9 +2,9 @@
 import HeaderHero from "./HeaderHero.vue";
 </script>
 <script>
-  export default {
-    name: 'Header'
-  }
+export default {
+  name: "HeaderMain",
+};
 </script>
 
 <template>
@@ -27,18 +27,18 @@ import HeaderHero from "./HeaderHero.vue";
 
 <style>
 .wrapper {
-  background-color:#f1f1f1;
-  padding-top:25px;
+  background-color: #f1f1f1;
+  padding-top: 25px;
 }
 .header {
   display: flex;
   margin: auto;
   width: 50%;
-  color:#315b6b;;
-  justify-content:center;
+  color: #315b6b;
+  justify-content: center;
 }
 .header h1 {
   font-size: 3.5em;
-  line-height:0em;
+  line-height: 0em;
 }
 </style>

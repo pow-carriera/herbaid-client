@@ -1,5 +1,5 @@
 <script setup>
-import NewsFeedArticle from './NewsFeedArticle.vue'
+import NewsFeedArticle from "./NewsFeedArticle.vue";
 </script>
 <script>
 export default {
@@ -9,7 +9,7 @@ export default {
       blogs: [],
     };
   },
-  props: ['title', 'content', 'displayphoto'],
+  props: ["title", "content", "displayphoto"],
   methods: {
     getBlogs() {
       this.axios
@@ -20,6 +20,15 @@ export default {
           console.log(response.data.data[0]);
         });
     },
+    getBlogsFil() {
+      this.axios
+        .get("http://localhost:1337/api/blogs?locale=fil&populate=*")
+        .then((response) => {
+          console.log(response.data);
+          this.blogs = response.data.data;
+          console.log(response.data.data[0]);
+        });
+    }
   },
   created() {
     this.getBlogs();
@@ -28,18 +37,43 @@ export default {
 </script>
 
 <template>
-  <h1 class="articleheader">Articles</h1>
-  <NewsFeedArticle v-for="(blog, index) in blogs" 
-            class="contentpage" 
-            :key="index"
-            :title="blog.attributes.title"
-            :author="blog.attributes.author"
-            :content="blog.attributes.content"
-            :displayphoto="blog.attributes.displayphoto.data.attributes.url"
+    <p class="locales"><button class="localebutton" @click="getBlogs">English</button><button class="localebutton" @click="getBlogsFil">Filipino</button></p>
+  <h1 class="articleheader">Articles</h1> 
+  <NewsFeedArticle
+    v-for="(blog, index) in blogs"
+    class="contentpage"
+    :key="index"
+    :title="blog.attributes.title"
+    :author="blog.attributes.author"
+    :content="blog.attributes.content"
+    :displayphoto="blog.attributes.displayphoto.data.attributes.url"
   />
 </template>
 
-<style>
+<style scoped>
+.localebutton {
+  padding: 5px;
+  margin: 5px;
+  background-color:#f1f1f1;
+  border-color:#91cac2;
+  border-style:solid;
+  border-radius:5px;
+  color:#315b6b;
+  transition: background-color .25s, color 0.25s;
+}
+.localebutton:hover {
+  color:#f1f1f1;
+  background-color:#315b6b;
+  border-color:#91cac2;
+  transition: background-color .25s, color 0.25s;
+}
+.locales {
+  text-align:center;
+}
+h1 {
+  margin-top: 50px;
+  line-height: 0px;
+}
 .articleheader {
   text-align: center;
   font-size: 3em;

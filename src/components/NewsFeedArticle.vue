@@ -1,19 +1,14 @@
 <script>
 export default {
-  props: ['title', 'content', 'displayphoto', 'author'],
-}
+  props: ["title", "content", "displayphoto", "author"],
+};
 </script>
 <template>
   <div class="content">
-      <h1>{{ title }}</h1>
-      <h3>{{ author }}</h3>
-      <div v-html="content"></div>
-      <img
-        :src="
-          'http://localhost:1337' + displayphoto
-        "
-        alt=""
-      />
+    <h1>{{ title }}</h1>
+    <h3>{{ author }}</h3>
+    <div v-html="content"></div>
+    <img :src="'http://localhost:1337' + displayphoto" alt="" />
   </div>
 </template>
 <style scoped>
@@ -22,12 +17,14 @@ export default {
   margin: auto;
   border-color: #8dcac1;
   border-radius: 25px;
-  border-style:solid;
-  padding:10px 50px 10px 50px;
+  border-style: solid;
+  padding: 10px 50px 10px 50px;
   background-color: #f1f1f1;
-  color:#2a5b6b;
+  color: #2a5b6b;
+  margin-bottom: 25px;
+  margin-top: 50px;
 }
 img {
-  width:100%;
+  width: 100%;
 }
 </style>
