@@ -22,22 +22,17 @@ export default {
 </script>
 
 <template>
-  <h1 class="header">Content Page</h1>
-  <div v-for="blog, index in blogs" class="contentpage"> 
+  <h1 class="articleheader">Articles</h1>
+  <div v-for="blog, index in blogs" class="contentpage" :key="index"> 
     <h1>{{ blog.attributes.title }}</h1>
     <div v-html="blog.attributes.content"></div>
     <img :src="'http://localhost:1337'+blog.attributes.displayphoto.data.attributes.url" alt="">
-    <div v-html="blog.attributes.sources"></div>
   </div>
 </template>
 
 <style>
-.contentpage {
-  margin: auto;
-  width: 70%;
-}
-.header {
-  margin: auto;
-  text-align:center;
-}
+  .contentpage {
+    width: 50%;
+    margin:auto;
+  }
 </style>
