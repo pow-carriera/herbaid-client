@@ -7,38 +7,50 @@ export default {
   data() {
     return {
       blogs: [],
+      translation: {},
     };
   },
-  props: ["title", "content", "displayphoto"],
   methods: {
-    getBlogs() {
+    getArticles() {
       this.axios
-        .get("http://localhost:1337/api/blogs?populate=*")
+        .get("http://localhost:1337/api/blogs?sort=updatedAt%3Adesc&populate=displayphoto")
         .then((response) => {
-          console.log(response.data);
           this.blogs = response.data.data;
-          console.log(response.data.data[0]);
+        });
+      this.axios
+        .get("http://localhost:1337/api/news-feed?locale=en")
+        .then((response) => {
+          console.log(response.data.data.attributes);
+          this.translation = response.data.data.attributes;
         });
     },
-    getBlogsFil() {
+    getArticlesFil() {
       this.axios
-        .get("http://localhost:1337/api/blogs?locale=fil&populate=*")
+        .get("http://localhost:1337/api/blogs?sort=updatedAt%3Adesc&locale=fil&populate=displayphoto")
         .then((response) => {
-          console.log(response.data);
           this.blogs = response.data.data;
-          console.log(response.data.data[0]);
         });
-    }
+      this.axios
+        .get("http://localhost:1337/api/news-feed?locale=fil")
+        .then((response) => {
+          console.log(response.data.data.attributes);
+          this.translation = response.data.data.attributes;
+        });
+    },
   },
   created() {
-    this.getBlogs();
+    this.getArticles();
+    console.log(this.translation);
   },
 };
 </script>
 
 <template>
-    <p class="locales"><button class="localebutton" @click="getBlogs">English</button><button class="localebutton" @click="getBlogsFil">Filipino</button></p>
-  <h1 class="articleheader">Articles</h1> 
+  <p class="locales">
+    <button class="localebutton" @click="getArticles">English</button>
+    <button class="localebutton" @click="getArticlesFil">Filipino</button>
+  </p>
+  <h1 class="articleheader">{{ translation.hero }}</h1>
   <NewsFeedArticle
     v-for="(blog, index) in blogs"
     class="contentpage"
@@ -46,7 +58,8 @@ export default {
     :title="blog.attributes.title"
     :author="blog.attributes.author"
     :content="blog.attributes.content"
-    :displayphoto="blog.attributes.displayphoto.data.attributes.url"
+    :display-photo="blog.attributes.displayphoto.data.attributes.url"
+    :last-update="blog.attributes.updatedAt"
   />
 </template>
 
@@ -54,21 +67,21 @@ export default {
 .localebutton {
   padding: 5px;
   margin: 5px;
-  background-color:#f1f1f1;
-  border-color:#91cac2;
-  border-style:solid;
-  border-radius:5px;
-  color:#315b6b;
-  transition: background-color .25s, color 0.25s;
+  background-color: #f1f1f1;
+  border-color: #91cac2;
+  border-style: solid;
+  border-radius: 5px;
+  color: #315b6b;
+  transition: background-color 0.25s, color 0.25s;
 }
 .localebutton:hover {
-  color:#f1f1f1;
-  background-color:#315b6b;
-  border-color:#91cac2;
-  transition: background-color .25s, color 0.25s;
+  color: #f1f1f1;
+  background-color: #315b6b;
+  border-color: #91cac2;
+  transition: background-color 0.25s, color 0.25s;
 }
 .locales {
-  text-align:center;
+  text-align: center;
 }
 h1 {
   margin-top: 50px;

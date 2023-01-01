@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import DirectoryView from "../views/DirectoryView.vue";
 import PageNotFound from "../components/404Error.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,6 +9,11 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
+    },
+    {
+      path: "/directory",
+      name: "directory",
+      component: DirectoryView,
     },
     {
       path: "/about",
