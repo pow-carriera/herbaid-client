@@ -13,7 +13,7 @@ export default {
   methods: {
     getArticles() {
       this.axios
-        .get("http://localhost:1337/api/blogs?sort=updatedAt%3Adesc&populate=displayphoto")
+        .get("http://localhost:1337/api/blogs?sort=createdAt%3Adesc&populate=displayphoto")
         .then((response) => {
           this.blogs = response.data.data;
         });
@@ -40,7 +40,7 @@ export default {
   },
   created() {
     this.getArticles();
-    console.log(this.translation);
+    console.log(this.blogs);
   },
 };
 </script>
@@ -59,7 +59,7 @@ export default {
     :author="blog.attributes.author"
     :content="blog.attributes.content"
     :display-photo="blog.attributes.displayphoto.data.attributes.url"
-    :last-update="blog.attributes.updatedAt"
+    :last-update="blog.attributes.createdAt"
   />
 </template>
 

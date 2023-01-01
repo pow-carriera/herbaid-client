@@ -133,7 +133,7 @@ h3 {
   border-color: #8dcac1;
   border-radius: 25px;
   border-style: solid;
-  padding: 10px 50px 10px 50px;
+  padding: 20px 50px 20px 50px;
   background-color: #f1f1f1;
   color: #2a5b6b;
   margin-bottom: 25px;
