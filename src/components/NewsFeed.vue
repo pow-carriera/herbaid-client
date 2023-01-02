@@ -13,28 +13,28 @@ export default {
   methods: {
     getArticles() {
       this.axios
-        .get("http://localhost:1337/api/blogs?sort=createdAt%3Adesc&populate=displayphoto")
-        .then((response) => {
-          this.blogs = response.data.data;
-        });
-      this.axios
         .get("http://localhost:1337/api/news-feed?locale=en")
         .then((response) => {
           console.log(response.data.data.attributes);
           this.translation = response.data.data.attributes;
         });
-    },
-    getArticlesFil() {
       this.axios
-        .get("http://localhost:1337/api/blogs?sort=updatedAt%3Adesc&locale=fil&populate=displayphoto")
+        .get("http://localhost:1337/api/blogs?sort=createdAt%3Adesc&populate=displayphoto")
         .then((response) => {
           this.blogs = response.data.data;
         });
+    },
+    getArticlesFil() {
       this.axios
         .get("http://localhost:1337/api/news-feed?locale=fil")
         .then((response) => {
           console.log(response.data.data.attributes);
           this.translation = response.data.data.attributes;
+        });
+      this.axios
+        .get("http://localhost:1337/api/blogs?sort=updatedAt%3Adesc&locale=fil&populate=displayphoto")
+        .then((response) => {
+          this.blogs = response.data.data;
         });
     },
   },
@@ -47,6 +47,7 @@ export default {
 
 <template>
   <p class="locales">
+    <h4>Language</h4>
     <button class="localebutton" @click="getArticles">English</button>
     <button class="localebutton" @click="getArticlesFil">Filipino</button>
   </p>
@@ -73,6 +74,10 @@ export default {
   border-radius: 5px;
   color: #315b6b;
   transition: background-color 0.25s, color 0.25s;
+}
+h4 {
+  color: #315b6b;
+  line-height:0;
 }
 .localebutton:hover {
   color: #f1f1f1;
