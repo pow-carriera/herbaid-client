@@ -10,12 +10,13 @@ export default {
       entries: [],
       tags: [],
       isempty: Boolean,
-      sort: String,
+      sort: '',
+      selectedTag: 'name'
     };
   },
   methods: {
     getEntries() {
-      this.axios.get("http://localhost:1337/api/remedies").then((response) => {
+      this.axios.get("http://localhost:1337/api/remedies?sort=name").then((response) => {
         this.entries = response.data.data;
       });
     },
@@ -26,14 +27,14 @@ export default {
           this.entries = response.data.data;
         });
     },
-    getTags() {
-      this.axios.get("http://localhost:1337/api/tags").then((response) => {
-        this.tags = response.data.data;
-        console.log(response.data.data);
-      });
+    getTags(sort) {
+      this.axios
+        .get("http://localhost:1337/api/tags?sort=" + sort + "")
+        .then((response) => {
+          this.tags = response.data.data;
+        });
     },
     getTaggedEntries(value) {
-      console.log(value);
       this.axios
         .get(
           "http://localhost:1337/api/remedies?filters[tags][name][$eq]=" +
@@ -44,12 +45,11 @@ export default {
           this.entries = response.data.data;
         });
     },
-    getTaggedEntries() {},
   },
   created() {
-    this.getTags(this.sort);
+    this.getTags("name");
     this.getEntries();
-  },
+  }
 };
 </script>
 
@@ -60,12 +60,26 @@ export default {
     <button class="localebutton" @click="getEntriesFil">Filipino</button>
   </div>
   <h1 class="articleheader">Remedies Directory</h1>
+  <h2>Search by Category</h2>
   <div class="tagbuttons">
-    <h2>Search by Category</h2>
-    <DirectoryFeedTags 
+    <div>
+      <p>
+        Category Sort:
+        <select name="tags" id="tags" v-model="selectedTag">
+          <option value="name">alphabetical (ascending)</option>
+          <option value="name:desc">alphabetical (descending)</option>
+          <option value="frequency:desc">more frequent</option>
+          <option value="frequency:asc">more rare</option>
+          <option value="name">harsher</option>
+          <option value="name">milder</option>
+        </select>
+        <button class="sortbutton" @click="getTags(selectedTag)">Sort</button>
+      </p>
+    </div>
+    <DirectoryFeedTags
       class="tagbutton specialtag"
       :tagname="'all remedies'"
-      @return-name="getEntries"  
+      @return-name="getEntries"
     />
     <DirectoryFeedTags
       class="tagbutton"
@@ -83,11 +97,47 @@ export default {
       :key="index"
       :name="entry.attributes.name"
       :content="entry.attributes.content"
-      />
+    />
   </div>
 </template>
 
 <style scoped>
+h2 {
+  text-align: center;
+}
+select {
+  background-color: #f1f1f1;
+  border-radius:5px;
+  border-color: #91cac2;
+  color: #315b6b;
+  width: 250px;
+
+}
+option {
+  background-color: #f1f1f1;
+  border-radius:5px;
+  border-color: #91cac2;
+  color: #315b6b;
+}
+.sortbutton {
+  border-color: #91cac2;
+  border-style:solid;
+  background-color: #f1f1f1;
+  color: #315b6b;
+  margin-left: 10px;
+  border-radius:5px;
+  transition: background-color 0.25s, color 0.25s;
+}
+.sortbutton:hover {
+  border-color: #91cac2;
+  border-style:solid;
+  color: #f1f1f1;
+  background-color: #315b6b;
+  margin-left: 10px;
+  transition: background-color 0.25s, color 0.25s;
+  cursor:pointer;
+  border-radius:5px;
+}
 .localebutton {
   padding: 5px;
   margin: 5px;
@@ -104,6 +154,9 @@ export default {
   border-color: #91cac2;
   transition: background-color 0.25s, color 0.25s;
 }
+p {
+  color: #315b6b;
+}
 h2,
 h4 {
   color: #315b6b;
@@ -113,6 +166,9 @@ h4 {
   margin: auto;
   width: 60%;
 }
+.specialtag {
+  font-weight: bold;
+}
 .tagbutton {
   padding: 5px;
   margin: 5px;
@@ -121,16 +177,15 @@ h4 {
   border-style: solid;
   border-radius: 5px;
   color: #315b6b;
-  transition: background-color 0.25s, color 0.25s;
-}
-.specialtag {
-  font-weight:bold;
+  transition: background-color 0.25s, color 0.25s, margin-left 0.25s, margin-right 0.25s;
 }
 .tagbutton:hover {
   color: #f1f1f1;
   background-color: #315b6b;
   border-color: #91cac2;
-  transition: background-color 0.25s, color 0.25s;
+  transition: background-color 0.25s, color 0.25s, margin-left 0.25s, margin-right 0.25s;
+  margin-left: 15px;
+  margin-right: 15px;
 }
 .locales,
 .tagbuttons {
