@@ -10,27 +10,24 @@ export default {
       entries: [],
       tags: [],
       isempty: Boolean,
-      sort: '',
-      selectedTag: 'name',
-      locale: 'en',
+      sort: "",
+      selectedTag: "name",
+      locale: "en",
     };
   },
-  computed: {
-  },
+  computed: {},
   methods: {
     localeChange(locale) {
-      this.locale = locale
-      console.log(this.locale)
+      this.locale = locale;
+      console.log(this.locale);
     },
     getEntries() {
-      this.axios.get("http://localhost:1337/api/remedies?sort=name&locale="+this.locale+"&populate=*").then((response) => {
-        this.entries = response.data.data;
-        console.log(response.data.data)
-      });
-    },
-    getEntriesFil() {
       this.axios
-        .get("http://localhost:1337/api/remedies/?locale=fil?populate=displayphoto?sort=name")
+        .get(
+          "http://localhost:1337/api/remedies?sort=name&locale=" +
+            this.locale +
+            "&populate=*"
+        )
         .then((response) => {
           this.entries = response.data.data;
         });
@@ -45,7 +42,11 @@ export default {
     getTaggedEntries(value) {
       this.axios
         .get(
-          "http://localhost:1337/api/remedies/?filters[tags][name][$eq]="+value+"&locale="+this.locale+"&populate=*"
+          "http://localhost:1337/api/remedies/?filters[tags][name][$eq]=" +
+            value +
+            "&locale=" +
+            this.locale +
+            "&populate=*"
         )
         .then((response) => {
           this.entries = response.data.data;
@@ -56,15 +57,19 @@ export default {
   created() {
     this.getTags("name");
     this.getEntries();
-  }
+  },
 };
 </script>
 
 <template v-cloak>
   <div class="locales">
     <h4>Language</h4>
-    <button class="localebutton" @click="localeChange('en'), getEntries()">English</button>
-    <button class="localebutton" @click="localeChange('fil'), getEntries()">Filipino</button>
+    <button class="localebutton" @click="localeChange('en'), getEntries()">
+      English
+    </button>
+    <button class="localebutton" @click="localeChange('fil'), getEntries()">
+      Filipino
+    </button>
   </div>
   <h1 class="articleheader">Remedies Directory</h1>
   <h2>Search by Category</h2>
@@ -91,6 +96,7 @@ export default {
     <DirectoryFeedTags
       class="tagbutton"
       v-for="(tag, index) in tags"
+      :key="index"
       :tagname="tag.attributes.name"
       @return-name="getTaggedEntries"
     />
@@ -115,37 +121,36 @@ h2 {
 }
 select {
   background-color: #f1f1f1;
-  border-radius:5px;
-  border-width:2px; 
+  border-radius: 5px;
+  border-width: 2px;
   border-color: #91cac2;
   color: #315b6b;
   width: 200px;
-
 }
 option {
   background-color: #f1f1f1;
-  border-radius:5px;
+  border-radius: 5px;
   border-color: #91cac2;
   color: #315b6b;
 }
 .sortbutton {
   border-color: #91cac2;
-  border-style:solid;
+  border-style: solid;
   background-color: #f1f1f1;
   color: #315b6b;
   margin-left: 10px;
-  border-radius:5px;
+  border-radius: 5px;
   transition: background-color 0.25s, color 0.25s;
 }
 .sortbutton:hover {
   border-color: #91cac2;
-  border-style:solid;
+  border-style: solid;
   color: #f1f1f1;
   background-color: #315b6b;
   margin-left: 10px;
   transition: background-color 0.25s, color 0.25s;
-  cursor:pointer;
-  border-radius:5px;
+  cursor: pointer;
+  border-radius: 5px;
 }
 .localebutton {
   padding: 5px;
@@ -186,13 +191,15 @@ h4 {
   border-style: solid;
   border-radius: 5px;
   color: #315b6b;
-  transition: background-color 0.25s, color 0.25s, margin-left 0.25s, margin-right 0.25s;
+  transition: background-color 0.25s, color 0.25s, margin-left 0.25s,
+    margin-right 0.25s;
 }
 .tagbutton:hover {
   color: #f1f1f1;
   background-color: #315b6b;
   border-color: #91cac2;
-  transition: background-color 0.25s, color 0.25s, margin-left 0.25s, margin-right 0.25s;
+  transition: background-color 0.25s, color 0.25s, margin-left 0.25s,
+    margin-right 0.25s;
   margin-left: 15px;
   margin-right: 15px;
 }

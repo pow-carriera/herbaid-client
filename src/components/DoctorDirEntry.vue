@@ -1,21 +1,25 @@
 <script>
-  export default {
-    props: ['name', 'field', 'description', 'displayPhoto']
-  }
+export default {
+  props: ["name", "field", "description", "displayPhoto"],
+};
 </script>
 
 <template>
   <div class="card">
     <div class="doctorprofile">
-      <img :src="'http://localhost:1337'+displayPhoto" alt="" class="displayphoto" />
+      <img
+        :src="'http://localhost:1337' + displayPhoto"
+        alt=""
+        class="displayphoto"
+      />
       <div class="titular">
         <h2 class="doctorname">{{ name }}</h2>
-        <span>{{field}}</span>
+        <span>{{ field }}</span>
       </div>
     </div>
     <div class="desc">Description:</div>
     <div class="data">
-      {{description}}
+      {{ description }}
     </div>
   </div>
 </template>
@@ -52,11 +56,12 @@
   padding: 0px;
   width: 100%;
 }
-.desc, .data {
+.desc,
+.data {
   margin: 0px 15px 0px 15px;
 }
 .desc {
-  font-weight:bold;
+  font-weight: bold;
   margin-bottom: 10px;
 }
 .data {

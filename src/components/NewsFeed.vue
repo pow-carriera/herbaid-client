@@ -8,31 +8,26 @@ export default {
     return {
       blogs: [],
       translation: {},
+      locale: "en",
     };
   },
   methods: {
+    localeChange(locale) {
+      this.locale = locale;
+      console.log(this.locale);
+    },
     getArticles() {
       this.axios
-        .get("http://localhost:1337/api/news-feed?locale=en")
+        .get("http://localhost:1337/api/news-feed?locale=" + this.locale + "")
         .then((response) => {
-          console.log(response.data.data.attributes);
           this.translation = response.data.data.attributes;
         });
       this.axios
-        .get("http://localhost:1337/api/blogs?sort=createdAt%3Adesc&populate=displayphoto")
-        .then((response) => {
-          this.blogs = response.data.data;
-        });
-    },
-    getArticlesFil() {
-      this.axios
-        .get("http://localhost:1337/api/news-feed?locale=fil")
-        .then((response) => {
-          console.log(response.data.data.attributes);
-          this.translation = response.data.data.attributes;
-        });
-      this.axios
-        .get("http://localhost:1337/api/blogs?sort=updatedAt%3Adesc&locale=fil&populate=displayphoto")
+        .get(
+          "http://localhost:1337/api/blogs?sort=createdAt%3Adesc&locale=" +
+            this.locale +
+            "&populate=displayphoto"
+        )
         .then((response) => {
           this.blogs = response.data.data;
         });
@@ -40,17 +35,20 @@ export default {
   },
   created() {
     this.getArticles();
-    console.log(this.blogs);
   },
 };
 </script>
 
 <template>
-  <p class="locales">
+  <div class="locales">
     <h4>Language</h4>
-    <button class="localebutton" @click="getArticles">English</button>
-    <button class="localebutton" @click="getArticlesFil">Filipino</button>
-  </p>
+    <button class="localebutton" @click="localeChange('en'), getArticles()">
+      English
+    </button>
+    <button class="localebutton" @click="localeChange('fil'), getArticles()">
+      Filipino
+    </button>
+  </div>
   <h1 class="articleheader">{{ translation.hero }}</h1>
   <NewsFeedArticle
     v-for="(blog, index) in blogs"
@@ -77,7 +75,7 @@ export default {
 }
 h4 {
   color: #315b6b;
-  line-height:0;
+  line-height: 0;
 }
 .localebutton:hover {
   color: #f1f1f1;

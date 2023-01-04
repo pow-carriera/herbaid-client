@@ -4,9 +4,9 @@ import DoctorDirectory from "../components/DoctorDirectory.vue";
 <script>
 export default {
   data() {
-    return {}
+    return {};
   },
-}
+};
 </script>
 <template>
   <DoctorDirectory />

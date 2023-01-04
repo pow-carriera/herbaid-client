@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import DirectoryView from "../views/DirectoryView.vue";
 import PageNotFound from "../views/404Error.vue";
-import DoctorView from "../views/DoctorView.vue"
+import DoctorView from "../views/DoctorView.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [

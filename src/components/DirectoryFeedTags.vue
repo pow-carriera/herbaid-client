@@ -1,12 +1,10 @@
 <script>
 export default {
   data() {
-    return {
-
-    }
+    return {};
   },
-  props: ['tagname']
-}
+  props: ["tagname"],
+};
 </script>
 <template>
   <button @click="this.$emit('return-name', tagname)">{{ tagname }}</button>

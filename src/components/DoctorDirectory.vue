@@ -10,10 +10,12 @@ export default {
   },
   methods: {
     getDoctors() {
-      this.axios.get("http://localhost:1337/api/doctors?populate=*").then((response) => {
-        this.doctors = response.data.data;
-        console.log(response.data.data);
-      });
+      this.axios
+        .get("http://localhost:1337/api/doctors?populate=*")
+        .then((response) => {
+          this.doctors = response.data.data;
+          console.log(response.data.data);
+        });
     },
   },
   created() {
@@ -25,10 +27,14 @@ export default {
 <template>
   <h1>Doctors' Directory</h1>
   <div class="container">
-    <Entry v-for="(doctor, index) in doctors" :name="doctor.attributes.name"
-    :field="doctor.attributes.field"
-    :display-photo="doctor.attributes.displayPhoto.data.attributes.url"
-    :description="doctor.attributes.description"/>
+    <Entry
+      v-for="(doctor, index) in doctors"
+      :key="index"
+      :name="doctor.attributes.name"
+      :field="doctor.attributes.field"
+      :display-photo="doctor.attributes.displayPhoto.data.attributes.url"
+      :description="doctor.attributes.description"
+    />
   </div>
 </template>
 
