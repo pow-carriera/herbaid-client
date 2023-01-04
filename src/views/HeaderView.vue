@@ -1,5 +1,5 @@
 <script setup>
-import HeaderHero from "./HeaderHero.vue";
+import HeaderHero from "../components/HeaderHero.vue";
 </script>
 <script>
 export default {

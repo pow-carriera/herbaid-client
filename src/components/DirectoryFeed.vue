@@ -11,18 +11,26 @@ export default {
       tags: [],
       isempty: Boolean,
       sort: '',
-      selectedTag: 'name'
+      selectedTag: 'name',
+      locale: 'en',
     };
   },
+  computed: {
+  },
   methods: {
+    localeChange(locale) {
+      this.locale = locale
+      console.log(this.locale)
+    },
     getEntries() {
-      this.axios.get("http://localhost:1337/api/remedies?sort=name").then((response) => {
+      this.axios.get("http://localhost:1337/api/remedies?sort=name&locale="+this.locale+"&populate=*").then((response) => {
         this.entries = response.data.data;
+        console.log(response.data.data)
       });
     },
     getEntriesFil() {
       this.axios
-        .get("http://localhost:1337/api/remedies/?locale=fil")
+        .get("http://localhost:1337/api/remedies/?locale=fil?populate=displayphoto?sort=name")
         .then((response) => {
           this.entries = response.data.data;
         });
@@ -37,12 +45,11 @@ export default {
     getTaggedEntries(value) {
       this.axios
         .get(
-          "http://localhost:1337/api/remedies?filters[tags][name][$eq]=" +
-            value +
-            "&populate=*"
+          "http://localhost:1337/api/remedies/?filters[tags][name][$eq]="+value+"&locale="+this.locale+"&populate=*"
         )
         .then((response) => {
           this.entries = response.data.data;
+          console.log(response.data.data);
         });
     },
   },
@@ -53,11 +60,11 @@ export default {
 };
 </script>
 
-<template>
+<template v-cloak>
   <div class="locales">
     <h4>Language</h4>
-    <button class="localebutton" @click="getEntries">English</button>
-    <button class="localebutton" @click="getEntriesFil">Filipino</button>
+    <button class="localebutton" @click="localeChange('en'), getEntries()">English</button>
+    <button class="localebutton" @click="localeChange('fil'), getEntries()">Filipino</button>
   </div>
   <h1 class="articleheader">Remedies Directory</h1>
   <h2>Search by Category</h2>
@@ -89,7 +96,7 @@ export default {
     />
   </div>
   <div class="feed" v-if="!entries.length">
-    <p>Sorry, we can't find anything here.</p>
+    <h2>Sorry, we can't find anything here.</h2>
   </div>
   <div class="feed" v-else>
     <DirectoryFeedEntry
@@ -97,6 +104,7 @@ export default {
       :key="index"
       :name="entry.attributes.name"
       :content="entry.attributes.content"
+      :display-photo="entry.attributes.displayPhoto.data.attributes.url"
     />
   </div>
 </template>
@@ -108,9 +116,10 @@ h2 {
 select {
   background-color: #f1f1f1;
   border-radius:5px;
+  border-width:2px; 
   border-color: #91cac2;
   color: #315b6b;
-  width: 250px;
+  width: 200px;
 
 }
 option {

@@ -8,11 +8,11 @@ export default {
   <div class="content">
     <div class="titlecontainer">
       <div class="displayphoto">
-        <!-- <img
+        <img
           class="article-image"
           :src="'http://localhost:1337' + displayPhoto"
           alt="article_image"
-        /> -->
+        />
       </div>
       <div class="titletext">
         <h1>{{ name }}</h1>

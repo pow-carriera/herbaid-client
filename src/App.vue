@@ -1,6 +1,6 @@
 <script setup>
-import HeaderMain from "./components/HeaderMain.vue";
-import NavigationBar from "./components/NavigationBar.vue";
+import HeaderMain from "./views/HeaderView.vue";
+import NavigationBar from "./views/NavigationBarView.vue";
 import { RouterView } from "vue-router";
 </script>
 
