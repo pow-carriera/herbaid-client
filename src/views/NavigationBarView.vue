@@ -1,5 +1,6 @@
 <script setup>
 import { routerKey, RouterLink } from "vue-router";
+import Swal from "sweetalert2";
 </script>
 
 <script>
@@ -14,47 +15,79 @@ export default {
   methods: {
     login() {
       console.log(this.username);
+      this.axios
+        .post("http://localhost:1337/api/auth/local/", {
+          identifier: this.username,
+          password: this.password,
+        })
+        .then((response) => {
+          this.jwtBearer = response.data.jwt;
+          localStorage.setItem("bearer", this.jwtBearer);
+          console.log(localStorage.getItem("bearer"));
+        })
+        .catch(function (error) {
+          Swal.fire({
+            title: "Error!",
+            text: "Wrong username or password",
+            icon: "error",
+          });
+        });
     },
     signup() {
-      this.$router.push("/signup")
-    }
+      this.$router.push("/signup");
+    },
+    logout() {
+      localStorage.setItem("bearer", null);
+      this.jwtBearer = null;
+    },
   },
 };
 </script>
 
 <template>
-  <nav id="nav">
-    <ul>
-      <li>
-        <div class="signon">
-          <div>
-            <input v-model="username" @keyup.enter="login()" />
-            <input
-            @keyup.enter="login()"
-              type="password"
-              v-model="password"
-            />
-          </div>
-          <div>
-            <button @click="login()" @keyup.enter="login()">Log In</button>
-            <button @click="signup()">Sign Up</button>
-          </div>
-        </div>
-      </li>
-      <br />
-      <li><RouterLink to="/">Home</RouterLink></li>
-      <li><RouterLink to="/directory">Herbal Directory</RouterLink></li>
-      <li><RouterLink to="/doctors">Doc Support</RouterLink></li>
-      <li><RouterLink to="/about">About Us</RouterLink></li>
-    </ul>
-  </nav>
+  <div class="bgcolor">
+    <div class="signon" v-if="!jwtBearer">
+      <div>
+        <input v-model="username" @keyup.enter="login()" />
+        <input @keyup.enter="login()" type="password" v-model="password" />
+      </div>
+      <div>
+        <button @click="login()" @keyup.enter="login()">Log In</button>
+        <button @click="signup()">Sign Up</button>
+      </div>
+    </div>
+    <div class="signon" v-else>
+      <div>
+        Welcome 
+      </div>
+      <div>
+        <button @click="logout()">Log Out</button>
+      </div>
+    </div>
+    <nav id="nav">
+      <ul>
+        <li><RouterLink to="/">Home</RouterLink></li>
+        <li><RouterLink to="/directory">Herbal Directory</RouterLink></li>
+        <li><RouterLink to="/doctors">Doc Support</RouterLink></li>
+        <li><RouterLink to="/about">About Us</RouterLink></li>
+      </ul>
+    </nav>
+  </div>
 </template>
 
 <style scoped>
-
+.bgcolor {
+  background-color: #f1f1f1;
+}
 .signon {
+  color: #315b6b;
   display: flex;
   align-items: center;
+  text-align: center;
+  width: auto;
+  justify-content:center;
+  margin: auto;
+  background-color: #f1f1f1;
 }
 input {
   width: 130px;
