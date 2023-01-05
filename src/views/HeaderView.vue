@@ -4,12 +4,17 @@ import HeaderHero from "../components/HeaderHero.vue";
 <script>
 export default {
   name: "HeaderMain",
+  methods: {
+    gohome() {
+      this.$router.push("/");
+    },
+  },
 };
 </script>
 
 <template>
   <header>
-    <div class="wrapper">
+    <div class="wrapper" @click="gohome">
       <div class="header">
         <span
           ><img
@@ -26,6 +31,9 @@ export default {
 </template>
 
 <style>
+.header:hover {
+  cursor: pointer;
+}
 .wrapper {
   background-color: #f1f1f1;
   padding-top: 25px;

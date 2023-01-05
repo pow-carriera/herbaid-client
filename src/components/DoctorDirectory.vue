@@ -1,21 +1,39 @@
 <script setup>
 import Entry from "../components/DoctorDirEntry.vue";
+import LocaleListBar from "./LocaleListBar.vue";
 </script>
 <script>
 export default {
   data() {
     return {
       doctors: [],
+      locales: [],
+      locale: "en",
     };
   },
   methods: {
-    getDoctors() {
+    localeChange(locale) {
+      this.locale = locale;
+      console.log(this.locale);
+      this.getCrew();
+    },
+    getLocales() {
       this.axios
-        .get("http://localhost:1337/api/doctors?populate=*", {
-          headers: {
-            authorization: localStorage.getItem("bearer")
+        .get("http://localhost:1337/api/i18n/locales")
+        .then((response) => {
+          this.locales = response.data;
+        });
+    },
+    getCrew() {
+      this.axios
+        .get(
+          "http://localhost:1337/api/doctors?populate=*&locale=" + this.locale,
+          {
+            headers: {
+              authorization: localStorage.getItem("bearer"),
+            },
           }
-        })
+        )
         .then((response) => {
           this.doctors = response.data.data;
           console.log(response.data.data);
@@ -23,20 +41,22 @@ export default {
     },
   },
   created() {
-    this.getDoctors();
+    this.getCrew();
+    this.getLocales();
   },
 };
 </script>
 
 <template>
-    <div class="locales">
+  <div class="locales">
     <h4>Language</h4>
-    <button class="localebutton" @click="localeChange('en'), getArticles()">
-      English
-    </button>
-    <button class="localebutton" @click="localeChange('fil'), getArticles()">
-      Filipino
-    </button>
+    <LocaleListBar
+      v-for="lang in locales"
+      :key="lang.code"
+      @return-code="localeChange"
+      :code="lang.code"
+      :name="lang.name"
+    />
   </div>
   <div class="articleheader">
     <h1>Doctors' Directory</h1>

@@ -90,8 +90,86 @@ function timeFormat(date) {
 <script>
 export default {
   props: ["id", "title", "content", "displayPhoto", "author", "lastUpdate"],
-  methods: {},
-  mounted() {
+  data() {
+    return {
+      blogId: this.$props.id,
+      bearerToken: localStorage.getItem("bearer"),
+      comments: [],
+      usercomment: "",
+      opencomments: false,
+      opendialog: "Show",
+    };
+  },
+  methods: {
+    submitComment() {
+      this.axios
+        .post(
+          "http://localhost:1337/api/comments/api::blog.blog:" +
+            this.blogId +
+            "",
+          {
+            content: this.usercomment,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + this.bearerToken,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response.data);
+        });
+      this.usercomment = "";
+      this.getArticleComments();
+    },
+    getArticleComments() {
+      this.axios
+        .get(
+          "http://localhost:1337/api/comments/api::blog.blog:" +
+            this.blogId +
+            "",
+          {
+            headers: {
+              Authorization: "Bearer " + this.bearerToken,
+            },
+          }
+        )
+        .then((response) => {
+          this.comments = response.data;
+          console.log(response.data[0]);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getLogStatus() {
+      if (localStorage.getItem("bearer") == "null") {
+        this.loggedout = true;
+      } else {
+        this.loggedout = false;
+      }
+    },
+    toggleComments() {
+      this.opencomments
+        ? (this.opencomments = !this.opencomments)
+        : (this.opencomments = !this.opencomments);
+      console.log(this.opencomments);
+    },
+    toggleShow() {
+      if (this.opendialog == "Show") {
+        this.opendialog = "Hide";
+        console.log(this.opendialog);
+      } else {
+        this.opendialog = "Show";
+        console.log(this.opendialog);
+      }
+    },
+  },
+  created() {
+    this.getArticleComments();
+    console.log(localStorage.getItem("bearer"));
+    this.getLogStatus();
   },
 };
 </script>
@@ -107,8 +185,7 @@ export default {
         />
       </div>
       <div class="titletext">
-        <p>{{id}}</p>
-        <h1> {{ title }}</h1>
+        <h1>{{ title }}</h1>
         <h3 style="float: left">{{ author }}</h3>
         <h4 style="float: right">
           {{ timeFormat(lastUpdate) }}
@@ -116,9 +193,82 @@ export default {
       </div>
     </div>
     <div v-html="content"></div>
+    <div>
+      <h2>
+        Comments:
+        <button @click="toggleComments(), toggleShow()">
+          {{ opendialog }}
+        </button>
+      </h2>
+      <div v-if="loggedout" class="text-align">Log in to view comments!</div>
+      <div v-else-if="!comments.length" class="text-align">
+        Be the first to comment!
+      </div>
+      <div v-else v-show="opencomments">
+        <div v-for="comment in comments" class="commententry" :key="comment.id">
+          <p style="line-height: 0px">
+            <b>{{ comment.author.name }} </b> ({{ comment.createdAt }})
+          </p>
+          <p style="margin-left: 10px">
+            {{ comment.content }}
+          </p>
+        </div>
+        <div class="commententry userinput">
+          <p style="line-height: 0px">
+            <b>Comment Here:</b>
+          </p>
+          <p style="margin-left: 10px">
+            <textarea type="text" v-model="usercomment" /><button
+              @click="submitComment()"
+            >
+              Comment
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <style scoped>
+button {
+  padding: 5px;
+  margin: 5px;
+  background-color: #f1f1f1;
+  border-color: #91cac2;
+  border-style: solid;
+  border-radius: 5px;
+  color: #315b6b;
+  transition: background-color 0.25s, color 0.25s;
+}
+button:hover {
+  color: #f1f1f1;
+  background-color: #315b6b;
+  border-color: #91cac2;
+  transition: background-color 0.25s, color 0.25s;
+}
+textarea {
+  width: calc(100% - 16px);
+  height: 50px;
+  border-style: solid;
+  border-width: 3px;
+  border-radius: 10px;
+  border-color: #2a5b6b;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+.text-align {
+  text-align: center;
+}
+.commententry {
+  border-style: solid;
+  border-radius: 10px;
+  padding: 5px;
+  background-color: #ffffff;
+  margin: 5px;
+}
+.userinput {
+  background-color: #f1f1f1;
+  border-color: black;
+}
 h3 {
   display: inline;
 }

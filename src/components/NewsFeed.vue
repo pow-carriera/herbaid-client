@@ -1,4 +1,5 @@
 <script setup>
+import LocaleListBar from "./LocaleListBar.vue";
 import NewsFeedArticle from "./NewsFeedArticle.vue";
 </script>
 <script>
@@ -21,45 +22,53 @@ export default {
     getArticles() {
       this.axios
         .get("http://localhost:1337/api/i18n/locales")
-        .then((response)=> {
-          this.locales = response.data 
-          console.log(this.locales)
-        })
+        .then((response) => {
+          this.locales = response.data;
+          console.log(this.locales);
+        });
       this.axios
         .get("http://localhost:1337/api/news-feed?locale=" + this.locale + "", {
           headers: {
-            authorization: localStorage.getItem("bearer")
-          }
+            authorization: localStorage.getItem("bearer"),
+          },
         })
         .then((response) => {
           this.translation = response.data.data.attributes;
         });
       this.axios
         .get(
-          "http://localhost:1337/api/blogs?sort=createdAt%3Adesc&locale=" +
+          "http://localhost:1337/api/blogs?sort=createdAt:desc&locale=" +
             this.locale +
-            "&populate=displayphoto", {
-          headers: {
-            authorization: localStorage.getItem("bearer")
+            "&populate=displayphoto",
+          {
+            headers: {
+              authorization: localStorage.getItem("bearer"),
+            },
           }
-        }
         )
         .then((response) => {
           this.blogs = response.data.data;
-          console.log(this.blogs[0])
+          console.log(this.blogs[0]);
         });
     },
   },
   created() {
     this.getArticles();
   },
+  components: { LocaleListBar },
 };
 </script>
 
 <template>
   <div class="locales">
     <h4>Language</h4>
-    <button class="localebutton" v-for="lang in locales" @click="localeChange(lang.code)">{{lang.name}}</button>
+    <LocaleListBar
+      v-for="lang in locales"
+      :key="lang.code"
+      @return-code="localeChange"
+      :code="lang.code"
+      :name="lang.name"
+    />
   </div>
   <h1 class="articleheader">{{ translation.hero }}</h1>
   <NewsFeedArticle

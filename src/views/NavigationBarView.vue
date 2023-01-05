@@ -1,5 +1,5 @@
 <script setup>
-import { routerKey, RouterLink } from "vue-router";
+import { RouterLink } from "vue-router";
 import Swal from "sweetalert2";
 </script>
 
@@ -8,9 +8,9 @@ export default {
   data() {
     return {
       jwtBearer: localStorage.getItem("bearer"),
-      username: "",
-      password: "",
       authdetails: false,
+      username: localStorage.getItem("username"),
+      password: "",
     };
   },
   methods: {
@@ -23,11 +23,14 @@ export default {
         })
         .then((response) => {
           this.jwtBearer = response.data.jwt;
+          localStorage.setItem("username", this.username);
           localStorage.setItem("bearer", this.jwtBearer);
           console.log(localStorage.getItem("bearer"));
           this.authdetails = false;
+          window.location.reload();
         })
         .catch(function (error) {
+          console.log(error);
           Swal.fire({
             title: "Error!",
             text: "Wrong username or password",
@@ -42,6 +45,7 @@ export default {
       localStorage.setItem("bearer", null);
       this.jwtBearer = null;
       this.authdetails = true;
+      window.location.reload();
     },
   },
   created() {
@@ -67,7 +71,7 @@ export default {
       </div>
     </div>
     <div class="signon" v-else>
-      <div>Welcome</div>
+      <div>Welcome {{ username }}</div>
       <div>
         <button @click="logout()">Log Out</button>
       </div>
@@ -104,6 +108,12 @@ input {
   border-radius: 15px;
   text-indent: 5px;
   border-color: #8dcac1;
+  outline: none;
+  transition: border-color 0.25s;
+}
+input:focus {
+  border-color: #315b6b;
+  transition: border-color 0.25s;
 }
 button {
   padding: 5px;

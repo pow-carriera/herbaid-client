@@ -1,6 +1,7 @@
 <script setup>
 import DirectoryFeedEntry from "./DirectoryFeedEntry.vue";
 import DirectoryFeedTags from "./DirectoryFeedTags.vue";
+import LocaleListBar from "./LocaleListBar.vue";
 </script>
 <script>
 export default {
@@ -13,20 +14,37 @@ export default {
       sort: "",
       selectedTag: "name",
       locale: "en",
+      locales: [],
     };
   },
   computed: {},
   methods: {
+    getFirstFetch() {
+      this.getLocales(), this.getEntries();
+    },
     localeChange(locale) {
       this.locale = locale;
       console.log(this.locale);
+      this.getEntries();
+    },
+    getLocales() {
+      this.axios
+        .get("http://localhost:1337/api/i18n/locales")
+        .then((response) => {
+          this.locales = response.data;
+        });
     },
     getEntries() {
       this.axios
         .get(
           "http://localhost:1337/api/remedies?sort=name&locale=" +
             this.locale +
-            "&populate=*"
+            "&populate=*",
+          {
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("bearer"),
+            },
+          }
         )
         .then((response) => {
           this.entries = response.data.data;
@@ -46,7 +64,14 @@ export default {
             value +
             "&locale=" +
             this.locale +
-            "&populate=*"
+            "&populate=*",
+          {},
+          {
+            headers: {
+              authorization:
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjcyOTE4MDQ5LCJleHAiOjE2NzU1MTAwNDl9.djPR2nWCkfi_bQQkL8mlAnLCZuAZDcK_PCQS5TkfnQk",
+            },
+          }
         )
         .then((response) => {
           this.entries = response.data.data;
@@ -56,7 +81,7 @@ export default {
   },
   created() {
     this.getTags("name");
-    this.getEntries();
+    this.getFirstFetch();
   },
 };
 </script>
@@ -64,12 +89,13 @@ export default {
 <template v-cloak>
   <div class="locales">
     <h4>Language</h4>
-    <button class="localebutton" @click="localeChange('en'), getEntries()">
-      English
-    </button>
-    <button class="localebutton" @click="localeChange('fil'), getEntries()">
-      Filipino
-    </button>
+    <LocaleListBar
+      v-for="lang in locales"
+      :key="lang.code"
+      @return-code="localeChange"
+      :code="lang.code"
+      :name="lang.name"
+    />
   </div>
   <h1 class="articleheader">Remedies Directory</h1>
   <h2>Search by Category</h2>
@@ -215,7 +241,7 @@ h1 {
 }
 .articleheader {
   text-align: center;
-  font-size: 3em;
+  font-size: 1em;
   color: #2a5b6b;
 }
 </style>
