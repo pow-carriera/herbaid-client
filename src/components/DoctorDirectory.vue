@@ -25,7 +25,18 @@ export default {
 </script>
 
 <template>
-  <h1>Doctors' Directory</h1>
+    <div class="locales">
+    <h4>Language</h4>
+    <button class="localebutton" @click="localeChange('en'), getArticles()">
+      English
+    </button>
+    <button class="localebutton" @click="localeChange('fil'), getArticles()">
+      Filipino
+    </button>
+  </div>
+  <div class="articleheader">
+    <h1>Doctors' Directory</h1>
+  </div>
   <div class="container">
     <Entry
       v-for="(doctor, index) in doctors"
@@ -48,5 +59,32 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   width: 75%;
+}
+.articleheader {
+  text-align: center;
+  color: #2a5b6b;
+}
+.localebutton {
+  padding: 5px;
+  margin: 5px;
+  background-color: #f1f1f1;
+  border-color: #91cac2;
+  border-style: solid;
+  border-radius: 5px;
+  color: #315b6b;
+  transition: background-color 0.25s, color 0.25s;
+}
+h4 {
+  color: #315b6b;
+  line-height: 0;
+}
+.localebutton:hover {
+  color: #f1f1f1;
+  background-color: #315b6b;
+  border-color: #91cac2;
+  transition: background-color 0.25s, color 0.25s;
+}
+.locales {
+  text-align: center;
 }
 </style>
