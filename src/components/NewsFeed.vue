@@ -8,6 +8,7 @@ export default {
     return {
       blogs: [],
       translation: {},
+      locales: [],
       locale: "en",
     };
   },
@@ -15,10 +16,21 @@ export default {
     localeChange(locale) {
       this.locale = locale;
       console.log(this.locale);
+      this.getArticles();
     },
     getArticles() {
       this.axios
-        .get("http://localhost:1337/api/news-feed?locale=" + this.locale + "")
+        .get("http://localhost:1337/api/i18n/locales")
+        .then((response)=> {
+          this.locales = response.data 
+          console.log(this.locales)
+        })
+      this.axios
+        .get("http://localhost:1337/api/news-feed?locale=" + this.locale + "", {
+          headers: {
+            authorization: localStorage.getItem("bearer")
+          }
+        })
         .then((response) => {
           this.translation = response.data.data.attributes;
         });
@@ -26,10 +38,15 @@ export default {
         .get(
           "http://localhost:1337/api/blogs?sort=createdAt%3Adesc&locale=" +
             this.locale +
-            "&populate=displayphoto"
+            "&populate=displayphoto", {
+          headers: {
+            authorization: localStorage.getItem("bearer")
+          }
+        }
         )
         .then((response) => {
           this.blogs = response.data.data;
+          console.log(this.blogs[0])
         });
     },
   },
@@ -42,18 +59,14 @@ export default {
 <template>
   <div class="locales">
     <h4>Language</h4>
-    <button class="localebutton" @click="localeChange('en'), getArticles()">
-      English
-    </button>
-    <button class="localebutton" @click="localeChange('fil'), getArticles()">
-      Filipino
-    </button>
+    <button class="localebutton" v-for="lang in locales" @click="localeChange(lang.code)">{{lang.name}}</button>
   </div>
   <h1 class="articleheader">{{ translation.hero }}</h1>
   <NewsFeedArticle
     v-for="(blog, index) in blogs"
     class="contentpage"
     :key="index"
+    :id="blog.id"
     :title="blog.attributes.title"
     :author="blog.attributes.author"
     :content="blog.attributes.content"

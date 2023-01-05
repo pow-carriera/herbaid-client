@@ -89,9 +89,10 @@ function timeFormat(date) {
 
 <script>
 export default {
-  props: ["title", "content", "displayPhoto", "author", "lastUpdate"],
+  props: ["id", "title", "content", "displayPhoto", "author", "lastUpdate"],
   methods: {},
-  mounted() {},
+  mounted() {
+  },
 };
 </script>
 
@@ -106,7 +107,8 @@ export default {
         />
       </div>
       <div class="titletext">
-        <h1>{{ title }}</h1>
+        <p>{{id}}</p>
+        <h1> {{ title }}</h1>
         <h3 style="float: left">{{ author }}</h3>
         <h4 style="float: right">
           {{ timeFormat(lastUpdate) }}

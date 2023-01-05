@@ -7,9 +7,10 @@ import Swal from "sweetalert2";
 export default {
   data() {
     return {
-      jwtBearer: "",
+      jwtBearer: localStorage.getItem("bearer"),
       username: "",
       password: "",
+      authdetails: false,
     };
   },
   methods: {
@@ -24,6 +25,7 @@ export default {
           this.jwtBearer = response.data.jwt;
           localStorage.setItem("bearer", this.jwtBearer);
           console.log(localStorage.getItem("bearer"));
+          this.authdetails = false;
         })
         .catch(function (error) {
           Swal.fire({
@@ -39,14 +41,22 @@ export default {
     logout() {
       localStorage.setItem("bearer", null);
       this.jwtBearer = null;
+      this.authdetails = true;
     },
+  },
+  created() {
+    if (this.jwtBearer == "null") {
+      this.authdetails = true;
+    } else {
+      this.authdetails = false;
+    }
   },
 };
 </script>
 
 <template>
   <div class="bgcolor">
-    <div class="signon" v-if="!jwtBearer">
+    <div class="signon" v-if="authdetails">
       <div>
         <input v-model="username" @keyup.enter="login()" />
         <input @keyup.enter="login()" type="password" v-model="password" />
@@ -57,9 +67,7 @@ export default {
       </div>
     </div>
     <div class="signon" v-else>
-      <div>
-        Welcome 
-      </div>
+      <div>Welcome</div>
       <div>
         <button @click="logout()">Log Out</button>
       </div>
@@ -85,7 +93,7 @@ export default {
   align-items: center;
   text-align: center;
   width: auto;
-  justify-content:center;
+  justify-content: center;
   margin: auto;
   background-color: #f1f1f1;
 }

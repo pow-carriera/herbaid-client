@@ -11,7 +11,11 @@ export default {
   methods: {
     getDoctors() {
       this.axios
-        .get("http://localhost:1337/api/doctors?populate=*")
+        .get("http://localhost:1337/api/doctors?populate=*", {
+          headers: {
+            authorization: localStorage.getItem("bearer")
+          }
+        })
         .then((response) => {
           this.doctors = response.data.data;
           console.log(response.data.data);
