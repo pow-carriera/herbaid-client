@@ -122,6 +122,8 @@ export default {
         });
       this.usercomment = "";
       this.getArticleComments();
+      this.opencomments = true;
+      this.opendialog = "Hide";
     },
     getArticleComments() {
       this.axios
@@ -137,7 +139,7 @@ export default {
         )
         .then((response) => {
           this.comments = response.data;
-          console.log(response.data[0]);
+          console.log(response.data);
         })
         .catch((error) => {
           console.log(error);
@@ -213,7 +215,8 @@ export default {
             {{ comment.content }}
           </p>
         </div>
-        <div class="commententry userinput">
+      </div>
+      <div class="commententry userinput">
           <p style="line-height: 0px">
             <b>Comment Here:</b>
           </p>
@@ -225,7 +228,6 @@ export default {
             </button>
           </p>
         </div>
-      </div>
     </div>
   </div>
 </template>

@@ -6,6 +6,7 @@ export default {
   data() {
     return {
       crewmembers: [],
+      bearer: {}
     };
   },
   methods: {
@@ -16,19 +17,28 @@ export default {
     },
     getDoctors() {
       this.axios
-        .get("http://localhost:1337/api/crewmembers?populate=*", {
-          headers: {
-            authorization: localStorage.getItem("bearer"),
-          },
-        })
+        .get("http://localhost:1337/api/crewmembers?populate=*", this.headerInject)
         .then((response) => {
           this.crewmembers = response.data.data;
           console.log(response);
         });
     },
+    loadBearer() {
+      if (localStorage.getItem("bearer")=="null") {
+        this.bearer = {};
+      } else {
+        this.bearer = {
+          header: {
+            Authorization: "Bearer " + localStorage.getItem("bearer")
+          }
+        }
+      }
+      console.log(this.bearer)
+    }
   },
   created() {
     this.getDoctors();
+    this.loadBearer();
   },
 };
 </script>

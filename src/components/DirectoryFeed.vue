@@ -15,6 +15,7 @@ export default {
       selectedTag: "name",
       locale: "en",
       locales: [],
+      bearer: {}
     };
   },
   computed: {},
@@ -39,12 +40,7 @@ export default {
         .get(
           "http://localhost:1337/api/remedies?sort=name&locale=" +
             this.locale +
-            "&populate=*",
-          {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("bearer"),
-            },
-          }
+            "&populate=*", this.bearer
         )
         .then((response) => {
           this.entries = response.data.data;
@@ -64,24 +60,30 @@ export default {
             value +
             "&locale=" +
             this.locale +
-            "&populate=*",
-          {},
-          {
-            headers: {
-              authorization:
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjcyOTE4MDQ5LCJleHAiOjE2NzU1MTAwNDl9.djPR2nWCkfi_bQQkL8mlAnLCZuAZDcK_PCQS5TkfnQk",
-            },
-          }
+            "&populate=*", this.bearer
         )
         .then((response) => {
           this.entries = response.data.data;
           console.log(response.data.data);
         });
     },
+    loadBearer() {
+      if (localStorage.getItem("bearer")=="null") {
+        this.bearer = {};
+      } else {
+        this.bearer = {
+          header: {
+            Authorization: "Bearer " + localStorage.getItem("bearer")
+          }
+        }
+      }
+      console.log(this.bearer)
+    }
   },
   created() {
     this.getTags("name");
     this.getFirstFetch();
+    this.loadBearer();
   },
 };
 </script>
